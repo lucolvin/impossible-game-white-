@@ -17,16 +17,27 @@ const bearDuration = 0.25;
 const checkboxDuration = 0.25;
 const pawDuration = 0.1;
 
+
 const SOUNDS = {
-  ON: new Audio('./on.wav'),
-  OFF: new Audio('./off.wav'),
+  ON: new Audio('Misc Sounds/click.mp3'),
+  OFF: new Audio('Misc Sounds/click2.mp3'),
   GROANS: [
-    new Audio('./groan.mp3'),
-    new Audio('./groan2.mp3'),
-    new Audio('./groan3.mp3'),
-    new Audio('./groan4.mp3')
+    new Audio('Growls/kim awesome growl.mp3'),
+    new Audio('Growls/kim1.mp3'),
+    new Audio('Growls/kim2.mp3'),
+    new Audio('Growls/kim3.mp3'),
+    new Audio('Growls/kim4.mp3'),
+    new Audio('Growls/kim6.mp3')
+
   ]
 };
+
+SOUNDS.GROANS.playbackRate = 2
+
+
+
+
+
 
 const App = () => {
   const [checked, setChecked] = useState(false);
@@ -38,6 +49,17 @@ const App = () => {
   const armRef = useRef(null);
   const bgRef = useRef(null);
   const indicatorRef = useRef(null);
+  const phrases = ["Please stop", "Enough already!", "No more!", "That's enough!", "Stop it!"];
+  const [selectedPhrase, setSelectedPhrase] = useState(phrases[Math.floor(Math.random() * phrases.length)]);
+  const updatePhrase = (prevPhrase) => {
+    let newPhrase;
+    do {
+      newPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+    } while (newPhrase === prevPhrase);
+
+    setSelectedPhrase(newPhrase);
+  };
+
 
   const onHover = () => {
     if (Math.random() > 0.5 && count > armLimit) {
@@ -140,20 +162,20 @@ const App = () => {
       })
         .to(
           bgRef.current,
-          { duration: checkboxDuration, backgroundColor: '#2eec71' },
+          { duration: checkboxDuration, backgroundColor: '#FF8200' },
           0
         )
         .to(indicatorRef.current, { duration: checkboxDuration, x: '100%' }, 0)
         .add(grabBearTL(), checkboxDuration);
     };
     if (checked) showTimeline();
+    updatePhrase(selectedPhrase);
   }, [checked, count]);
 
   return /*#__PURE__*/(
     React.createElement(Fragment, null, /*#__PURE__*/
     React.createElement("div", { className: "bear__wrap" }, /*#__PURE__*/
-    React.createElement("div", { ref: swearRef, className: "bear__swear" }, "#@$%*!"), /*#__PURE__*/
-
+    React.createElement("div", { ref: swearRef, className: "bear__swear" }, selectedPhrase), // Use the selected phrase here
 
     React.createElement("svg", {
       ref: bearRef,
@@ -296,3 +318,5 @@ const App = () => {
 };
 
 render( /*#__PURE__*/React.createElement(App, null), rootNode);
+
+
